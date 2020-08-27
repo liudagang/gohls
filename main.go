@@ -39,6 +39,10 @@ func parseContent(content string) {
 			ch <- line
 		}
 	}
+
+	for i := 0; i < 20; i++ {
+		ch <- ""
+	}
 }
 
 // @title saveSegment
@@ -46,6 +50,10 @@ func parseContent(content string) {
 func saveSegment() {
 	for {
 		seg := <-ch
+		if len(seg) < 1 {
+			fmt.Println("goroutine finish...")
+			break
+		}
 		url := baseurl + seg
 
 		// save file
@@ -148,4 +156,8 @@ func main() {
 	// wait
 	waitCh := make(chan int)
 	<-waitCh
+
+	// open a webserver to the savedir
+	// http.Handle("/", http.FileServer(http.Dir(saveDir)))
+	// http.ListenAndServe(":80", nil)
 }
